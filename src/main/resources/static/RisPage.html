@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ris-CSV转换器</title>
+    <!-- jQuery -->
+    <script src="/js/jquery-3.5.1.js"></script>
+
+<!--    &lt;!&ndash; Bootstrap Core JavaScript &ndash;&gt;-->
+<!--    <script src="/js/bootstrap-3.3.4.min.js"></script>-->
+<!--    &lt;!&ndash; Bootstrap Core CSS &ndash;&gt;-->
+<!--    <link href="/css/bootstrap-3.3.4.css" rel="stylesheet" type="text/css" >-->
+
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" >
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+<body>
+
+
+<nav class="navbar navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#" style="font-size: 30px; font-weight: bold">
+            <img src="/images/bit.jpeg" alt="Logo" width="90" height="90" class="d-inline-block ">
+            INCOSE文献 Ris-CSV转换器
+        </a>
+    </div>
+</nav>
+<br><br>
+<div class="container">
+
+            <div class="card">
+                <div class="card-body">
+<!--                    <h5 class="card-title">Card title</h5>-->
+<!--                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+                    <h2>CSV文件生成于以下路径：</h2>
+                    <textarea class="input-xlarge" id="path" rows="3" style="width: 550px"></textarea>
+<!--                    <input id="path" type="text" value="" style="width: 700px"/>-->
+                    <br><br>
+                    <form  id="uploadForm">
+
+                        <label for="uploadFile" class="form-label">选择上传的Ris文件</label>
+                        <a href="javascript:;" class="a-upload">
+                            <input type="file" name="file" id="uploadFile" >
+                        </a>
+                        <button onclick="fnUpload()" class="btn btn-primary btn-sm">转换成CSV</button>
+
+                        <!--    <a href="/download" target="_blank">Download CSV</a>-->
+                    </form>
+                </div>
+            </div>
+
+</div>
+
+
+
+
+
+
+
+<!--<form action="/DownloadCsv" method="post" enctype="multipart/form-data">-->
+<!--    <label for="fileDownload">选择要下载的Csv文件</label>-->
+<!--    <input type="file" id="fileDownload" name="fileDownload">-->
+<!--    <br><br>-->
+<!--    <input type="submit" value="下载">-->
+<!--</form>-->
+
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            url: "http://localhost:8080/csvLocation",
+            type: "GET",
+            success: function (result) {
+                console.log(result)
+                $("#path").val(result);
+            }
+        })
+    })
+    function fnUpload() {
+        var formData = new FormData($("#uploadForm")[0]);//var formData = new FormData();//formData.append("file", $("#file")[0].files[0]); //获取文件法二   两种方法都可以
+        console.log(formData)
+
+        $.ajax({
+            async: false,//要求同步 不是不需看你的需求
+            url: "/uploadRis",
+            type: 'POST',
+            data: formData,
+            processData: false,  //必须false才会避开jQuery对 formdata 的默认处理
+            contentType: false,  //必须false才会自动加上正确的Content-Type
+            success: function (res) {
+                console.log(res)
+                //alert("请求成功");
+            }, error: function (res) {
+                alert("请求失败");
+            }
+        });
+    }
+</script>
+</html>
